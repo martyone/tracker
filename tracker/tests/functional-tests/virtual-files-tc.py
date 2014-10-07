@@ -22,7 +22,7 @@ import sys,os,dbus
 import unittest
 import time
 import random
-import configuration
+from common.utils import configuration
 import commands
 import signal
 import string

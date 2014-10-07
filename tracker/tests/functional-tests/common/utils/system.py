@@ -231,7 +231,7 @@ class TrackerSystemAbstraction:
 
 
 if __name__ == "__main__":
-    import gtk, glib, time
+    import gtk, time
 
     def destroy_the_world (a):
         a.tracker_store_testing_stop ()

@@ -23,7 +23,7 @@ import unittest
 import time
 import random
 import commands
-import configuration
+from common.utils import configuration
 from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GObject
 import shutil

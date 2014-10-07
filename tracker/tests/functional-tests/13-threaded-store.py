@@ -22,7 +22,6 @@ Test that the threads in the daemon are working:
  A very long query shouldn't block smaller queries.
 """
 import os, dbus
-import glib
 from gi.repository import GObject
 from gi.repository import GLib
 import time

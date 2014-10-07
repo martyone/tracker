@@ -18,7 +18,6 @@
 # 02110-1301, USA.
 #
 import dbus
-import glib
 import commands
 from gi.repository import GLib
 from gi.repository import GObject
