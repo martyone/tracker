@@ -5,6 +5,7 @@ utils_SCRIPTS =                                        \
 	configuration.py                               \
 	dconf.py				       \
 	expectedFailure.py                             \
+	extractor.py                                   \
 	helpers.py                                     \
 	storetest.py                                   \
 	minertest.py                                   \
