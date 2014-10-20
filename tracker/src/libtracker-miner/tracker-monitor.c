@@ -1106,6 +1106,30 @@ monitor_event_file_moved (TrackerMonitor *monitor,
 		g_hash_table_remove (monitor->priv->pre_update, src_file);
 
 		/* And keep on notifying the MOVED event */
+	} else if (monitor->priv->tree &&
+	           !tracker_indexing_tree_file_is_indexable (monitor->priv->tree,
+	                                                     src_file,
+	                                                     G_FILE_TYPE_REGULAR)) {
+		gchar *src_uri, *dst_uri;
+
+		src_uri = g_file_get_uri (src_file);
+		dst_uri = g_file_get_uri (dst_file);
+
+		g_debug ("File 'A' not indexable - processing MOVE(A, B) as CHANGED(B) for '%s->%s'",
+		         src_uri,
+		         dst_uri);
+
+		g_hash_table_replace (monitor->priv->pre_update,
+		                      g_object_ref (dst_file),
+		                      event_data_new (dst_file,
+		                                      NULL,
+		                                      FALSE,
+		                                      G_FILE_MONITOR_EVENT_CHANGED));
+
+		g_free (src_uri);
+		g_free (dst_uri);
+
+		return;
 	}
 
 	new_event = event_data_new (src_file,

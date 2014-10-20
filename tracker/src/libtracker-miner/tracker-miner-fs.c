@@ -1510,7 +1510,7 @@ item_add_or_update (TrackerMinerFS *fs,
 	 * created, its meta data might already be in the store
 	 * (possibly inserted by other application) - in such a case
 	 * we have to UPDATE, not INSERT. */
-	urn = lookup_file_urn (fs, file, FALSE);
+	urn = lookup_file_urn (fs, file, TRUE);
 
 	if (!tracker_indexing_tree_file_is_root (fs->priv->indexing_tree, file)) {
 		parent = g_file_get_parent (file);
@@ -1886,6 +1886,38 @@ item_move (TrackerMinerFS *fs,
 
 		g_free (source_uri);
 		g_free (uri);
+
+		return retval;
+	}
+
+	if (!source_exists) {
+		/* There are more ways to get into this. One example:
+		 *
+		 * copy ("file.txt", ".temp_XYZ.file.txt")
+		 *  - received G_FILE_MONITOR_EVENT_CREATED (".temp.file.txt")
+		 *  - received G_FILE_MONITOR_EVENT_CHANGED (".temp.file.txt")
+		 *  - received G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT (".temp.file.txt")
+		 * modify (".temp_XYZ.file.txt")
+		 *  - received G_FILE_MONITOR_EVENT_CHANGED (".temp.file.txt")
+		 *  - received G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT (".temp.file.txt")
+		 * mv (".temp_XYZ.file.txt", "file.txt")
+		 *  - received G_FILE_MONITOR_EVENT_MOVED (".temp.file.txt", "file.txt")
+		 *  - emitted  ITEM_MOVED (".temp.file.txt", "file.txt")
+		 *
+		 * No way to get ".temp.file.txt" indexed before ITEM_MOVED is processed - the file
+		 * disappears too fast.
+		 */
+
+		gboolean retval = TRUE;
+
+		g_debug ("Source file '%s' not found in store to move, indexing '%s' from scratch", source_uri, uri);
+
+		retval = item_add_or_update (fs, file,
+		                             G_PRIORITY_DEFAULT);
+
+		g_free (source_uri);
+		g_free (uri);
+		g_object_unref (file_info);
 
 		return retval;
 	}

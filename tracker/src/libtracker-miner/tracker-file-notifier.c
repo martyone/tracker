@@ -1133,6 +1133,7 @@ monitor_item_moved_cb (TrackerMonitor *monitor,
 		if (is_directory) {
 			check_file = g_object_ref (file);
 		} else {
+			/* We only cache directories in TrackerFileSystem once crawling has completed! */
 			check_file = g_file_get_parent (file);
 		}
 
@@ -1140,6 +1141,10 @@ monitor_item_moved_cb (TrackerMonitor *monitor,
 
 		/* If the (parent) directory is in
 		 * the filesystem, file is stored
+		 *
+		 * Notice! not definitely valid for non directories! As a result we may
+		 * emit FILE_MOVED when we should emit FILE_CREATED instead.
+		 * Let TrackerMinerFS handle it, see item_move().
 		 */
 		source_stored = (tracker_file_system_peek_file (priv->file_system,
 		                                                check_file) != NULL);
