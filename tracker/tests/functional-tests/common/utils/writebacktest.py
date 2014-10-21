@@ -89,6 +89,7 @@ class CommonTrackerWritebackTest (ut.TestCase):
         self.system = TrackerSystemAbstraction ()
 
         self.system.tracker_writeback_testing_start (CONF_OPTIONS)
+        self.system.tracker_miner_fs_wait_for_idle ()
         # Returns when ready
         log ("Ready to go!")
         

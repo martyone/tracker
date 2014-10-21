@@ -594,4 +594,5 @@ class WritebackHelper (Helper):
 
     PROCESS_NAME = 'tracker-writeback'
     PROCESS_PATH = os.path.join (cfg.EXEC_PREFIX, 'tracker-writeback')
+    FLAGS = ['--disable-shutdown']
     BUS_NAME = cfg.WRITEBACK_BUSNAME
