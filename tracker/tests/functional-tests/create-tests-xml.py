@@ -34,7 +34,7 @@ HEADER = """
   <suite name="tracker">
     <description>Functional tests for the brilliant tracker</description> """
 
-TEST_CASE_TMPL = """        <case name="%s" timeout="180">
+TEST_CASE_TMPL = """        <case name="%s" timeout="240">
             <description>%s</description>
             <step>%s</step>
         </case>"""
